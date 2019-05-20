@@ -1,7 +1,6 @@
-{ stdenv, util, mkStackSnapshotPkgSet }:
+{ stdenv, cabal-install, mkStackSnapshotPkgSet }:
 
 with stdenv.lib;
-with util;
 
 let
   pkgSet = mkStackSnapshotPkgSet {
@@ -20,6 +19,9 @@ let
   env = pkgSet.config.hsPkgs.shellFor {
     packages = ps: with ps; [ conduit conduit-extra resourcet ];
     withHoogle = true;
+    # This adds cabal-install to the shell, which helps tests because
+    # they use a nix-shell --pure. Normally you would BYO cabal-install.
+    buildInputs = [ cabal-install ];
   };
 
 in
@@ -40,9 +42,7 @@ in
     passthru = {
       # Used for debugging with nix repl
       inherit pkgSet;
-
       # Used for testing externally with nix-shell (../tests.sh).
-      # This just adds cabal-install to the existing shell.
-      env = addCabalInstall env;
+      inherit env;
     };
 }
