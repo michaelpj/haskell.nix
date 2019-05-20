@@ -57,7 +57,7 @@ echo >& 2
 printf "*** Checking shellFor works with a Stackage snapshot...\n" >& 2
 nix-shell $NIX_BUILD_ARGS \
     --pure ./default.nix \
-    -A shell-for.env \
+    -A shell-for.env.stack \
     --run 'cd shell-for && runghc conduit.hs'
 echo >& 2
 
