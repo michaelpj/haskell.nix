@@ -61,4 +61,11 @@ nix-shell $NIX_BUILD_ARGS \
     --run 'cd shell-for && runghc conduit.hs'
 echo >& 2
 
+printf "*** Checking shellFor works for a cabal project...\n" >& 2
+nix-shell $NIX_BUILD_ARGS \
+    --pure ./default.nix \
+    -A shell-for.env.cabal \
+    --run 'cd shell-for && cabal new-build all'
+echo >& 2
+
 printf "\n*** Finished successfully\n" >& 2
